@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <string.h>
+
+void bestfit(int bsize[],int psize[],int n,int m)
+{
+    int allocation[n];
+    memset(allocation,-1,sizeof(allocation));
+    for(int i=0;i<n;i++)
+    {
+        int y=-1;
+        for(int j=0;j<m;j++)
+        {
+            if(bsize[j]>=psize[i])
+            {
+                if(y==-1 || bsize[j]<bsize[y])
+                {
+                    y=j;
+                }
+            }
+        }
+        if(y!=-1)
+        {
+            allocation[i]=y;
+            bsize[y]-=psize[i];
+        }
+    }
+    
+    printf("P NO\tP SIZE\tALLOCATION");
+    for(int i=0;i<n;i++)
+    {
+        printf("\n%d\t%d",i+1,psize[i]);
+        if(allocation[i]!=-1)
+        {
+            printf("\t%d",allocation[i]+1);
+        }
+        else
+        {
+            printf("\t-");
+        }
+    }
+    
+    printf("\nFree blocks are: ");
+    for(int i=0;i<m;i++)
+    {
+        printf("%d ",bsize[i]);
+    }
+}
+
+void main()
+{
+    int n,m;
+    printf("Enter the size of the block array:");
+    scanf("%d",&m);
+    printf("Enter the size of the process array:");
+    scanf("%d",&n);
+    int psize[n],bsize[m];
+    printf("Enter the block sizes in order:");
+    for(int j=0;j<m;j++)
+    {
+        scanf("%d",&bsize[j]);
+    }
+    printf("Enter the process sizes in order:");
+    for(int i=0;i<n;i++)
+    {
+        scanf("%d",&psize[i]);
+    }
+    
+    bestfit(bsize,psize,n,m);
+}
