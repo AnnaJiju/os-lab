@@ -1,0 +1,81 @@
+#include <stdio.h>
+
+void main() {
+    int n, i, j, temp;
+    
+    // Prompt user for number of processes
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    
+    int at[n], bt[n], tt[n], wt[n], id[n];
+    
+    // Input arrival and burst times for each process
+    for (i = 0; i < n; i++) {
+        printf("Enter arrival time of process %d: ", i+1);
+        scanf("%d", &at[i]);
+        printf("Enter burst time of process %d: ", i+1);
+        scanf("%d", &bt[i]);
+        id[i] = i + 1;
+    }
+    
+    // Sort processes by burst time (Bubble sort)
+    for (i = 0; i < n-1; i++) {
+        for (j = 0; j < n-i-1; j++) {
+            if (bt[j] > bt[j+1]) {
+                // Swap arrival times
+                temp = at[j+1];
+                at[j+1] = at[j];
+                at[j] = temp;
+                
+                // Swap burst times
+                temp = bt[j+1];
+                bt[j+1] = bt[j];
+                bt[j] = temp;
+                
+                // Swap process IDs
+                temp = id[j+1];
+                id[j+1] = id[j];
+                id[j] = temp;
+            }
+        }
+    }
+    
+    int time1 = 0, completed = 0;
+    int complete[n];
+    for (i = 0; i < n; i++) {
+        complete[i] = 0;
+    }
+    
+    // Process scheduling based on arrival and burst times
+    while (completed < n) {
+        int flag = 0;
+        for (i = 0; i < n; i++) {
+            if (at[i] <= time1 && complete[i] != -1) {
+                time1 += bt[i];
+                tt[i] = time1 - at[i];
+                wt[i] = tt[i] - bt[i];
+                flag = 1;
+                complete[i] = -1;
+                completed++;
+                break;
+            }
+        }
+        if (!flag) {
+            time1++;
+        }
+    }
+    
+    // Output process details and calculate averages
+    printf("Process no\tArrival time\tBurst time\tTurnaround time\tWaiting time\n");
+    for (i = 0; i < n; i++) {
+        printf("\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", id[i], at[i], bt[i], tt[i], wt[i]);
+    }
+    
+    float ttsum = 0, wtsum = 0;
+    for (i = 0; i < n; i++) {
+        ttsum += tt[i];
+        wtsum += wt[i];
+    }
+    printf("Average turnaround time = %f\n", ttsum / n);
+    printf("Average waiting time = %f\n", wtsum / n);
+}
